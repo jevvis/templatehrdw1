@@ -5,6 +5,7 @@ import {
   AboutSection,
   EducationSection,
   TrainingsSection,
+  PrestasiSection,
   AwardsSection,
   SkillsSection,
   PersonalSkillsSection,
@@ -30,6 +31,9 @@ export default function Home() {
       </FadeInSection>
       <FadeInSection>
         <TrainingsSection />
+      </FadeInSection>
+      <FadeInSection>
+        <PrestasiSection />
       </FadeInSection>
       <FadeInSection>
         <AwardsSection />

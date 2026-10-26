@@ -28,6 +28,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.education': 'PENDIDIKAN',
     'nav.work': 'MAGANG',
     'nav.org': 'ORGANISASI',
+    'nav.achievements': "PRESTASI",
     'nav.awards': 'SERTIFIKASI',
     'nav.skills': 'KEAHLIAN',
     'nav.contact': 'HUBUNGI SAYA',
@@ -201,6 +202,14 @@ const translations: Record<Language, Record<string, string>> = {
     'org.2.loc': 'Depok, Jawa Barat',
     'org.2.desc': 'Menyusun rencana pengeluaran dan mengelola perputaran dana organisasi selama satu periode kepengurusan. Menyusun laporan pertanggungjawaban keuangan sebagai bentuk akuntabilitas pengelolaan dana organisasi.',
 
+    // ── Prestasi & Pencapaian
+    'achv.label': "PRESTASI & PENCAPAIAN",
+    'achv.title': "Prestasi & Pencapaian",
+    'achv.1.badge': "LULUSAN TERBAIK 1",
+    'achv.1.title': "Lulusan Terbaik 1 Program Studi Pendidikan Profesi Apoteker",
+    'achv.1.inst': "Fakultas Farmasi Universitas Indonesia",
+    'achv.1.period': "2025 — 2026",
+
     // ── Awards Section
     'awards.label': 'LISENSI & SERTIFIKASI',
     'awards.title': 'Sertifikasi & Lisensi Resmi',
@@ -279,6 +288,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.education': 'EDUCATION',
     'nav.work': 'INTERNSHIP',
     'nav.org': 'ORGANIZATION',
+    'nav.achievements': "ACHIEVEMENTS",
     'nav.awards': 'CERTIFICATIONS',
     'nav.skills': 'COMPETENCIES',
     'nav.contact': 'CONTACT ME',
@@ -451,6 +461,14 @@ const translations: Record<Language, Record<string, string>> = {
     'org.2.period': '2022 — 2023',
     'org.2.loc': 'Depok, West Java',
     'org.2.desc': 'Formulated expenditure budgets and managed cash flow throughout the term. Prepared financial accountability reports for student governance.',
+
+    // ── Prestasi & Pencapaian
+    'achv.label': "ACHIEVEMENTS",
+    'achv.title': "Achievements",
+    'achv.1.badge': "TOP GRADUATE 1",
+    'achv.1.title': "Top Graduate 1 of the Pharmacist Professional Education Study Program",
+    'achv.1.inst': "Faculty of Pharmacy, Universitas Indonesia",
+    'achv.1.period': "2025 — 2026",
 
     // ── Awards Section
     'awards.label': 'LICENSES & CERTIFICATIONS',
