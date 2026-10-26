@@ -1,58 +1,246 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import TypewriterTitle from './TypewriterTitle'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const projects = [
-  {
-    id: 1,
-    title: 'Boarding House Rental System',
-    description: 'Developed a web-based boarding house rental platform for managing property listings, bookings, payments, and reviews, with separate access and features for students, landlords, and administrators.',
-    image: '/projects/boarding-house.jpg',
-    link: '#',
-  },
-  {
-    id: 2,
-    title: 'RFID-Based CPSC Student Monitoring System with Automated Photo Capture and Email Notification',
-    description: 'Developed an RFID-based student monitoring system that automates attendance tracking through RFID scanning, photo capture, email notifications, Google Drive export, and administrative reporting. Awarded Best Capstone Paper and Best Capstone System.',
-    image: '/projects/rfid-system.jpg',
-    link: '#',
-  },
-  {
-    id: 3,
-    title: 'DocuTrack Document Tracking System',
-    description: 'A comprehensive document tracking and management system for efficient file organization and workflow.',
-    image: '/projects/docutrack.jpg',
-    link: '#',
-  },
-  {
-    id: 4,
-    title: 'Empowering Rapid Development',
-    description: 'A platform designed to accelerate development workflows and team productivity.',
-    image: '/projects/empowering.jpg',
-    link: '#',
-  },
-  {
-    id: 5,
-    title: 'IT Management Portal',
-    description: 'Web-based IT management platform for tracking resources, tickets, and team workflows.',
-    image: '/projects/it-portal.jpg',
-    link: '#',
-  },
-]
+function InternshipImageStack({
+  images,
+  title,
+  align,
+}: {
+  images: string[]
+  title: string
+  align: 'left' | 'right'
+}) {
+  const { t } = useLanguage()
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
 
-export default function WorkGallery() {
-  const [activeIndex, setActiveIndex] = useState(Math.floor(projects.length / 2))
+  // kartu depan "dibuang" (terlempar + memudar), lalu muncul lagi di belakang tanpa menyapu melintasi kartu lain
+  const [leavingIdx, setLeavingIdx] = useState<number | null>(null)
+  const [resetIdx, setResetIdx] = useState<number | null>(null)
+  const busy = useRef(false)
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : projects.length - 1))
+  const goTo = (target: number) => {
+    if (images.length < 2 || busy.current || target === activeIndex) return
+    busy.current = true
+    const leaving = activeIndex
+    setLeavingIdx(leaving)
+    setActiveIndex(target)
+    window.setTimeout(() => {
+      setLeavingIdx(null)
+      setResetIdx(leaving) // lompat ke posisi belakang tanpa transisi, masih transparan
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          setResetIdx(null) // lalu muncul pelan di belakang
+          busy.current = false
+        })
+      )
+    }, 430)
   }
+  const handleNext = () => goTo((activeIndex + 1) % images.length)
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev < projects.length - 1 ? prev + 1 : 0))
-  }
+  const isRight = align === 'right'
+  const xSign = isRight ? -1 : 1
+  const rotSign = isRight ? -1 : 1
 
   return (
-    <section id="work" className="relative py-20 px-4 md:px-8 overflow-hidden">
+    <div className="w-full relative pt-7 pb-3 px-3 select-none">
+      <div
+        className={`relative w-full aspect-video group ${images.length > 1 ? 'cursor-pointer' : ''}`}
+        onClick={handleNext}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {images.map((img, idx) => {
+          const offset = (idx - activeIndex + images.length) % images.length
+
+          let transformStyle = ''
+          let zIndex = 0
+          let opacity = 0
+          let filter = 'brightness(1)'
+
+          if (offset === 0) {
+            transformStyle = 'translate(0px, 0px) rotate(0deg) scale(1)'
+            zIndex = 20
+            opacity = 1
+            filter = 'brightness(1)'
+          } else if (offset === 1) {
+            const tx = isHovered ? xSign * 18 : xSign * 12
+            const ty = isHovered ? -18 : -12
+            const rot = isHovered ? rotSign * 4 : rotSign * 2.5
+            transformStyle = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(0.97)`
+            zIndex = 10
+            opacity = 0.88
+            filter = isHovered ? 'brightness(0.92)' : 'brightness(0.82)'
+          } else if (offset === 2) {
+            const tx = isHovered ? xSign * 34 : xSign * 24
+            const ty = isHovered ? -34 : -24
+            const rot = isHovered ? rotSign * 8 : rotSign * 5
+            transformStyle = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(0.94)`
+            zIndex = 5
+            opacity = 0.72
+            filter = isHovered ? 'brightness(0.82)' : 'brightness(0.68)'
+          }
+
+          // fase animasi per kartu: dibuang -> lompat ke belakang (tanpa transisi) -> normal
+          let transition = 'transform 480ms cubic-bezier(0.25, 1, 0.5, 1), opacity 350ms ease, filter 350ms ease'
+          if (idx === leavingIdx) {
+            transformStyle = `translate(${-xSign * 150}px, -44px) rotate(${-rotSign * 15}deg) scale(0.9)`
+            zIndex = 30
+            opacity = 0
+            filter = 'brightness(1)'
+            transition = 'transform 430ms cubic-bezier(0.3, 0.7, 0.25, 1), opacity 320ms ease-in 70ms, filter 250ms ease'
+          } else if (idx === resetIdx) {
+            opacity = 0
+            transition = 'none'
+          }
+
+          return (
+            <div
+              key={idx}
+              className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl border border-[var(--card-border)] bg-[var(--card-bg)] will-change-transform"
+              style={{
+                transform: transformStyle,
+                zIndex,
+                opacity,
+                filter,
+                transition,
+              }}
+            >
+              <img
+                src={img}
+                alt={`${title} - ${t('ui.photo')} ${idx + 1}`}
+                draggable={false}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 pointer-events-none" />
+            </div>
+          )
+        })}
+
+        {/* Floating pill: Click to shuffle next */}
+        {images.length > 1 && (
+          <div className="absolute top-4 right-4 z-40 pointer-events-none">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 dark:bg-black/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-medium shadow-lg">
+              <span>{activeIndex + 1} / {images.length}</span>
+              <span className="opacity-60">•</span>
+              <span className="text-[10px] opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                {t('ui.changePhoto')}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Dots indicator at bottom */}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 left-4 z-40 flex items-center gap-1.5 pointer-events-auto">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  goTo(i)
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === activeIndex
+                    ? 'w-6 bg-emerald-500 shadow-md'
+                    : 'w-2 bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`${t('ui.viewPhoto')} ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default function WorkGallery() {
+  const { t } = useLanguage()
+
+  const internships = [
+    {
+      number: '01',
+      role: t('work.1.role'),
+      institution: t('work.1.inst'),
+      location: t('work.1.loc'),
+      period: t('work.1.period'),
+      subtitle: t('work.1.sub'),
+      description: t('work.1.desc'),
+      tags: ['Farmasi Klinis', 'PTO Pasien Stroke', 'Skrining Resep', 'Konseling ARV', 'Unit Dose 1×24 Jam', 'Rekonsiliasi Obat'],
+      images: ['/projects/kariadi-outdoor.jpg', '/projects/kariadi-action.jpg', '/projects/hospital-pharmacy.jpg'],
+      align: 'right' as const,
+    },
+    {
+      number: '02',
+      role: t('work.2.role'),
+      institution: t('work.2.inst'),
+      location: t('work.2.loc'),
+      period: t('work.2.period'),
+      subtitle: t('work.2.sub'),
+      description: t('work.2.desc'),
+      tags: ['Farmasi Komunitas', 'PRB BPJS', 'Pelayanan Swamedikasi', 'Dispensing Resep', 'Pemberian Informasi Obat', 'Kimia Farma'],
+      images: ['/projects/kimiafarma-apotek.jpg', '/projects/kimiafarma-konsultasi.jpg'],
+      align: 'left' as const,
+    },
+    {
+      number: '03',
+      role: t('work.3.role'),
+      institution: t('work.3.inst'),
+      location: t('work.3.loc'),
+      period: t('work.3.period'),
+      subtitle: t('work.3.sub'),
+      description: t('work.3.desc'),
+      tags: ['Pelayanan Primer', 'Pengelolaan Sediaan', 'Stok Opname', 'Konseling Edukasi', 'Pemantauan Kadaluwarsa', 'Puskesmas'],
+      images: ['/projects/puskesmas-cengkareng.jpg', '/projects/puskesmas-selfie.jpg'],
+      align: 'right' as const,
+    },
+    {
+      number: '04',
+      role: t('work.4.role'),
+      institution: t('work.4.inst'),
+      location: t('work.4.loc'),
+      period: t('work.4.period'),
+      subtitle: t('work.4.sub'),
+      description: t('work.4.desc'),
+      tags: ['Industri Farmasi', 'CPOB / GMP', 'In-Process Control (IPC)', 'Quality Control (QC)', 'Disolusi & LOD', 'Cleanroom & HVAC'],
+      images: ['/projects/biofarma-lab.jpg', '/projects/biofarma-lobby.jpg', '/projects/biofarma-plant.jpg'],
+      align: 'left' as const,
+    },
+    {
+      number: '05',
+      role: t('work.5.role'),
+      institution: t('work.5.inst'),
+      location: t('work.5.loc'),
+      period: t('work.5.period'),
+      subtitle: t('work.5.sub'),
+      description: t('work.5.desc'),
+      tags: ['Regulatory Affairs', 'Kemenkes RI', 'Izin Edar Alkes', 'Registrasi Produk', 'Evaluasi Dokumen', 'Standar Farmalkes'],
+      images: ['/projects/kemenkes-farmalkes.jpg', '/projects/kemenkes-outdoor.jpg'],
+      align: 'right' as const,
+    },
+    {
+      number: '06',
+      role: t('work.6.role'),
+      institution: t('work.6.inst'),
+      location: t('work.6.loc'),
+      period: t('work.6.period'),
+      subtitle: t('work.6.sub'),
+      description: t('work.6.desc'),
+      tags: ['Praktikum Farmakologi', 'Asisten Dosen', 'Bimbingan 6 Kelas', 'Evaluasi Akademik', 'Universitas Indonesia'],
+      images: ['/projects/farmakologi-praktikum.jpg', '/projects/farmakologi-tim.jpg'],
+      align: 'left' as const,
+    },
+  ]
+
+  return (
+    <section id="work" className="relative py-24 px-4 md:px-8 overflow-hidden font-sans">
       {/* Background Waves */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.1] z-0">
         <svg className="w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="none" fill="none" stroke="currentColor">
@@ -62,117 +250,85 @@ export default function WorkGallery() {
         </svg>
       </div>
 
-      {/* Floating 306 Widget */}
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40 bg-[var(--card-bg)] border border-[var(--card-border)] border-l-0 rounded-r-xl px-4 py-2.5 flex items-center gap-3 shadow-xl opacity-90 hover:opacity-100 transition-opacity hidden md:flex cursor-pointer">
-        <span className="text-lg">☕</span>
-        <span className="text-sm font-bold font-mono text-[var(--foreground)]">306</span>
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:justify-between mb-12 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
           <div>
-            <p className="text-xs tracking-[0.3em] uppercase text-[var(--muted)] mb-3">SELECTED WORK</p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-3">Work Gallery</h2>
-            <p className="text-[var(--muted)] text-sm max-w-md">
-              A collection of systems, digital projects, and technical work I&apos;ve built.
+            <p className="text-[10px] tracking-[0.3em] uppercase text-[var(--muted)] mb-4 font-semibold font-sans">
+              {t('work.label')}
+            </p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight font-sans">
+              <TypewriterTitle text={t('work.title')} />
+            </h2>
+            <p className="text-[var(--muted)] text-sm md:text-base max-w-xl font-sans">
+              {t('work.subtitle')}
             </p>
           </div>
           <a
             href="/projects"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--foreground)] text-[var(--background)] text-sm font-medium hover:opacity-90 transition-colors shrink-0"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--foreground)] text-[var(--background)] text-xs font-semibold tracking-wider hover:opacity-90 transition-opacity shrink-0 w-max font-sans"
           >
-            View More Projects
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
+            {t('work.cta')}
           </a>
         </div>
 
-        {/* Carousel */}
-        <div className="relative">
-          <div className="flex items-center justify-center gap-2 md:gap-4 py-8 overflow-hidden">
-            {projects.map((project, index) => {
-              const offset = index - activeIndex
-              const isActive = index === activeIndex
-              const absOffset = Math.abs(offset)
-              
-              if (absOffset > 2) return null
-
-              return (
-                <div
-                  key={project.id}
-                  className="cursor-pointer transition-all duration-500 ease-out shrink-0"
-                  style={{
-                    transform: `translateX(${offset * 15}px) scale(${isActive ? 1 : 0.85 - absOffset * 0.05}) perspective(1000px) rotateY(${offset * -5}deg)`,
-                    opacity: isActive ? 1 : 0.4 - absOffset * 0.1,
-                    zIndex: 10 - absOffset,
-                    width: isActive ? 'clamp(240px, 60vw, 600px)' : 'clamp(160px, 40vw, 400px)',
-                  }}
-                  onClick={() => setActiveIndex(index)}
-                >
-                  <div className={`rounded-xl overflow-hidden shadow-2xl border ${
-                    isActive ? 'border-[var(--card-border)]' : 'border-transparent'
-                  }`}>
-                    <div className="aspect-[16/10] bg-[var(--card-bg)] flex items-center justify-center overflow-hidden">
-                      {project.image ? (
-                        <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="text-center p-6">
-                          <div className="w-12 h-12 mx-auto mb-3 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-blue-400">
-                              <rect x="3" y="3" width="18" height="18" rx="2" />
-                              <path d="M3 9h18" />
-                              <path d="M9 21V9" />
-                            </svg>
-                          </div>
-                          <p className="text-xs font-medium">{project.title}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+        {/* Alternating Story Cards with Animated Stacked Photos */}
+        <div className="flex flex-col gap-24 lg:gap-32">
+          {internships.map((item, idx) => (
+            <div
+              key={idx}
+              className={`flex flex-col lg:flex-row gap-10 lg:gap-16 items-center ${
+                item.align === 'left' ? 'lg:flex-row-reverse' : ''
+              }`}
+            >
+              {/* Text Content */}
+              <div className="w-full lg:w-1/2 flex flex-col font-sans">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xs font-sans font-bold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                    {item.number}
+                  </span>
+                  <span className="text-[11px] tracking-widest text-[var(--muted)] uppercase font-sans font-semibold">
+                    {item.period}
+                  </span>
                 </div>
-              )
-            })}
-          </div>
 
-          {/* Arrow buttons */}
-          <button
-            onClick={handlePrev}
-            className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors z-20 shadow-lg"
-            aria-label="Previous project"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-          <button
-            onClick={handleNext}
-            className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors z-20 shadow-lg"
-            aria-label="Next project"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-[var(--foreground)] mb-1 font-sans">
+                  {item.institution}
+                </h3>
+                <h4 className="text-lg md:text-xl font-semibold text-emerald-500 mb-2 font-sans">
+                  {item.role}
+                </h4>
+                <p className="text-xs md:text-sm font-semibold text-[var(--muted)] mb-5 font-sans">
+                  {item.subtitle} • <span className="opacity-75">{item.location}</span>
+                </p>
 
-        {/* Active project info */}
-        <div className="text-center mt-8 max-w-2xl mx-auto">
-          <h3 className="text-xl md:text-2xl font-bold mb-3">
-            {projects[activeIndex].title}
-          </h3>
-          <p className="text-[var(--muted)] text-sm leading-relaxed mb-4">
-            {projects[activeIndex].description}
-          </p>
-          <a
-            href={projects[activeIndex].link}
-            className="inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 hover:opacity-70 transition-opacity"
-          >
-            View Project →
-          </a>
+                <p className="text-[var(--muted)] text-sm leading-relaxed mb-6 text-justify font-sans">
+                  {item.description}
+                </p>
+
+                {/* Badges */}
+                <div className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] font-medium px-3 py-1.5 rounded-lg bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] opacity-90 font-sans"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stacked Animated Photos */}
+              <div className="w-full lg:w-1/2">
+                <InternshipImageStack
+                  images={item.images}
+                  title={item.institution}
+                  align={item.align}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

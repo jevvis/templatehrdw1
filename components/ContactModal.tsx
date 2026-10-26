@@ -20,11 +20,11 @@ export default function ContactModal() {
 
   return (
     <div className={`fixed z-[100] transition-all duration-300 ease-in-out ${isMinimized ? 'bottom-4 right-4 w-64' : 'bottom-4 right-4 sm:bottom-8 sm:right-8 w-[calc(100%-2rem)] sm:w-[400px]'}`}>
-      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-neutral-900 border border-[var(--card-border)] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--card-border)] bg-[var(--background)]/50">
-          <h3 className="font-semibold text-sm">Send Me a Message</h3>
+          <h3 className="font-semibold text-sm">Kirim Pesan</h3>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setIsMinimized(!isMinimized)}
@@ -45,30 +45,30 @@ export default function ContactModal() {
 
         {/* Body */}
         {!isMinimized && (
-          <form className="p-6 flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); setIsOpen(false); alert("Message sent successfully!"); }}>
+          <form className="p-6 flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); setIsOpen(false); alert("Pesan berhasil terkirim!"); }}>
             <div>
-              <label className="block text-[10px] tracking-[0.2em] uppercase text-[var(--muted)] font-semibold mb-2">Full Name</label>
+              <label className="block text-[10px] tracking-[0.2em] uppercase text-[var(--muted)] font-semibold mb-2">Nama Lengkap</label>
               <input 
                 type="text" 
                 required
-                placeholder="Your full name" 
+                placeholder="Nama lengkap Anda" 
                 className="w-full bg-transparent border-b border-[var(--card-border)] focus:border-[var(--foreground)] text-sm py-2 outline-none transition-colors placeholder:text-[var(--muted)]/50"
               />
             </div>
             <div>
-              <label className="block text-[10px] tracking-[0.2em] uppercase text-[var(--muted)] font-semibold mb-2">Email Address</label>
+              <label className="block text-[10px] tracking-[0.2em] uppercase text-[var(--muted)] font-semibold mb-2">Alamat Email</label>
               <input 
                 type="email" 
                 required
-                placeholder="your.email@example.com" 
+                placeholder="email.anda@example.com" 
                 className="w-full bg-transparent border-b border-[var(--card-border)] focus:border-[var(--foreground)] text-sm py-2 outline-none transition-colors placeholder:text-[var(--muted)]/50"
               />
             </div>
             <div>
-              <label className="block text-[10px] tracking-[0.2em] uppercase text-[var(--muted)] font-semibold mb-2">Message</label>
+              <label className="block text-[10px] tracking-[0.2em] uppercase text-[var(--muted)] font-semibold mb-2">Pesan</label>
               <textarea 
                 required
-                placeholder="Tell me about your project..." 
+                placeholder="Tuliskan pesan atau keperluan Anda..." 
                 rows={3}
                 className="w-full bg-transparent border-b border-[var(--card-border)] focus:border-[var(--foreground)] text-sm py-2 outline-none transition-colors resize-none placeholder:text-[var(--muted)]/50"
               />
@@ -77,7 +77,7 @@ export default function ContactModal() {
               type="submit"
               className="mt-2 w-full py-3.5 rounded-full bg-[var(--card-border)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)] text-xs font-bold tracking-widest uppercase transition-colors"
             >
-              SEND MESSAGE →
+              KIRIM PESAN →
             </button>
           </form>
         )}

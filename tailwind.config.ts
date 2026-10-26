@@ -12,6 +12,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)'],
         oswald: ['var(--font-oswald)'],
+        script: ['"Dancing Script"', 'cursive'],
       },
       animation: {
         marquee: 'marquee 30s linear infinite',

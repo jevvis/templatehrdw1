@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Oswald } from 'next/font/google'
 import './globals.css'
-import ContactModal from '@/components/ContactModal'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -13,13 +13,14 @@ const oswald = Oswald({
   variable: '--font-oswald',
 })
 
+
 export const metadata: Metadata = {
-  title: 'Jevvi Supratama | Portfolio',
-  description: 'Software Developer & IT Professional — Web Development, Software Testing, IT Operations',
-  keywords: ['Jevvi Supratama', 'portfolio', 'web developer', 'software tester'],
+  title: 'apt. Hafizah Nurfadillah, S.Farm | Portfolio Clinical Pharmacist',
+  description: 'Licensed Pharmacist | Aspiring Clinical Pharmacist | Patient-Centered Care — Universitas Indonesia',
+  keywords: ['Hafizah Nurfadillah', 'Apoteker', 'Farmasi Klinis', 'Clinical Pharmacist', 'Universitas Indonesia', 'RSUP Dr. Kariadi', 'Patient Safety', 'PTO', 'Dispensing'],
   openGraph: {
-    title: 'Jevvi Supratama | Portfolio',
-    description: 'Software Developer & IT Professional',
+    title: 'apt. Hafizah Nurfadillah, S.Farm | Portfolio Clinical Pharmacist',
+    description: 'Licensed Pharmacist | Aspiring Clinical Pharmacist | Patient-Centered Care',
     type: 'website',
   },
 }
@@ -44,14 +45,20 @@ export default function RootLayout({
                     document.documentElement.classList.remove('dark');
                   }
                 } catch(e) {}
+                try {
+                  if (sessionStorage.getItem('intro-seen')) {
+                    document.documentElement.classList.add('intro-done', 'hero-go');
+                  }
+                } catch(e) {}
               })();
             `,
           }}
         />
       </head>
       <body className={`${inter.variable} ${oswald.variable} font-sans antialiased`}>
-        {children}
-        <ContactModal />
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   )
