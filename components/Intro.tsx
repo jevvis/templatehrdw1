@@ -6,7 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 /**
  * Layar pembuka: kapsul tergambar garis demi garis, nama muncul, lalu layar terbelah ke atas-bawah
  * dan hero terungkap bertahap (lihat .hero-anim di globals.css).
- * - Hanya sekali per kunjungan (sessionStorage); skrip di <head> (layout.tsx) menyembunyikannya sebelum cat pertama.
+ * - Tampil di setiap muat ulang dan kunjungan baru; dilewati hanya bila datang dari halaman lain di situs ini (skrip di <head> di layout.tsx menyembunyikannya sebelum cat pertama).
  * - Bisa dilewati: klik, Esc, atau Enter.
  * - Pengaman: bila JavaScript gagal, CSS menyembunyikan layar ini sendiri setelah beberapa detik.
  */
@@ -35,9 +35,6 @@ export default function Intro() {
         window.setTimeout(() => {
           root.classList.add('intro-done')
           root.classList.remove('intro-lock')
-          try {
-            sessionStorage.setItem('intro-seen', '1')
-          } catch {}
         }, DONE_AFTER_MS)
       )
     }
