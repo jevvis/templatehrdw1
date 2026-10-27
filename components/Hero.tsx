@@ -39,9 +39,9 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+    <section className="relative h-[100svh] md:h-screen w-full overflow-hidden flex items-center justify-center">
       {/* Kata besar di belakang foto (diam): huruf solid tebal yang memudar ke bawah */}
-      <div className="absolute inset-x-0 top-[13vh] flex justify-center overflow-hidden pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-x-0 top-[11svh] md:top-[13vh] flex justify-center overflow-hidden pointer-events-none" aria-hidden="true">
         <span className="inline-flex font-oswald text-[clamp(90px,19.5vw,340px)] font-bold uppercase leading-[0.9] tracking-tight select-none">
           {'PORTOFOLIO'.split('').map((ch, i) => (
             <span key={i} className="hero-name hero-anim hero-letter" style={{ '--d': `${i * 75}ms` } as React.CSSProperties}>
@@ -58,8 +58,8 @@ export default function Hero() {
         <p className="mt-3 text-xs lg:text-[13px] leading-relaxed text-[var(--muted)]">{t('hero.tagline')}</p>
       </div>
 
-      {/* Versi HP: sapaan + nama di bawah foto */}
-      <div className="hero-anim absolute inset-x-0 bottom-6 z-20 md:hidden text-center pointer-events-none px-4" style={{ '--d': '1000ms' } as React.CSSProperties}>
+      {/* Versi HP: sapaan + nama di antara kata besar dan kepala foto */}
+      <div className="hero-anim absolute inset-x-0 top-[calc(11svh+8.5rem)] z-20 md:hidden text-center pointer-events-none px-4" style={{ '--d': '1000ms' } as React.CSSProperties}>
         <p className="font-script text-2xl font-bold text-emerald-600 dark:text-emerald-400 leading-none">{t('hero.hey')}</p>
         <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Hafizah Nurfadillah</h1>
       </div>
@@ -86,7 +86,7 @@ export default function Hero() {
           onMouseMove={handleMouseMove}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="relative w-[340px] sm:w-[440px] md:w-[560px] lg:w-[680px] xl:w-[760px] max-w-[92vw] cursor-pointer perspective-[1200px] select-none"
+          className="relative w-[118vw] sm:w-[440px] md:w-[560px] lg:w-[680px] xl:w-[760px] max-w-none sm:max-w-[92vw] cursor-pointer perspective-[1200px] select-none"
         >
           {/* Ambient Aura / Glow Backdrop */}
           <div
