@@ -54,7 +54,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // ── About Section
     'about.label': 'TENTANG SAYA',
-    'about.title': "Apoteker Klinis. Pelayanan Berpusat pada Pasien.",
+    'about.title': "Apoteker Klinis. Lulusan Terbaik 1 Profesi.",
     'about.ipk': 'IPK Profesi',
     'about.toefl': 'IPK S1',
     'about.year': 'Apoteker',
@@ -314,7 +314,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // ── About Section
     'about.label': 'ABOUT ME',
-    'about.title': 'Clinical Pharmacist. Patient-Centered Care.',
+    'about.title': 'Clinical Pharmacist. Top Graduate 1 of the Profession.',
     'about.ipk': 'Profession GPA',
     'about.toefl': 'Bachelor GPA',
     'about.year': 'Licensed',
