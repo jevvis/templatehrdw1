@@ -52,7 +52,7 @@ export default function Hero() {
       </div>
 
       {/* Sapaan + nama + tagline (kiri) */}
-      <div className="hero-anim absolute left-[4vw] lg:left-[6vw] top-[47%] 2xl:left-auto 2xl:right-1/2 2xl:mr-[280px] 2xl:top-[50%] 2xl:w-[300px] z-20 hidden md:block max-w-[250px] lg:max-w-[300px] pointer-events-none" style={{ '--d': '1000ms' } as React.CSSProperties}>
+      <div className="hero-anim absolute left-[4vw] lg:left-[6vw] top-[47%] 2xl:left-auto 2xl:right-1/2 2xl:mr-[360px] 2xl:top-[50%] 2xl:w-[300px] z-20 hidden md:block max-w-[250px] lg:max-w-[300px] pointer-events-none" style={{ '--d': '1000ms' } as React.CSSProperties}>
         <p className="font-script text-3xl lg:text-4xl font-bold text-emerald-600 dark:text-emerald-400 -rotate-3 leading-none mb-1">{t('hero.hey')}</p>
         <h1 className="text-2xl lg:text-4xl font-bold tracking-tight text-[var(--foreground)] leading-[1.05]">Hafizah Nurfadillah</h1>
         <p className="mt-3 text-xs lg:text-[13px] leading-relaxed text-[var(--muted)]">{t('hero.tagline')}</p>
@@ -65,14 +65,14 @@ export default function Hero() {
       </div>
 
       {/* Keterangan kecil kiri-bawah */}
-      <div className="hero-anim absolute left-[4vw] lg:left-[6vw] bottom-8 2xl:left-auto 2xl:right-1/2 2xl:mr-[280px] 2xl:w-[300px] z-20 hidden md:block pointer-events-none text-[9px] lg:text-[10px] tracking-[0.2em] font-semibold uppercase text-[var(--muted)] leading-relaxed" style={{ '--d': '1200ms' } as React.CSSProperties}>
+      <div className="hero-anim absolute left-[4vw] lg:left-[6vw] bottom-8 2xl:left-auto 2xl:right-1/2 2xl:mr-[360px] 2xl:w-[300px] z-20 hidden md:block pointer-events-none text-[9px] lg:text-[10px] tracking-[0.2em] font-semibold uppercase text-[var(--muted)] leading-relaxed" style={{ '--d': '1200ms' } as React.CSSProperties}>
         <p>{t('hero.based1')}</p>
         <p>{t('hero.based2')}</p>
       </div>
 
       {/* Kartu peran + tombol (kanan-bawah) */}
-      <div className="absolute right-[3vw] lg:right-[5vw] bottom-8 xl:right-0 xl:left-[calc(50%+0.339*min(82vh,651px))] xl:-translate-x-6 z-20 hidden md:flex flex-col items-center">
-        {/* kartu putih (tetap putih di mode terang maupun gelap). Di xl+: kolom dari lengan kanan foto (setengah lebar jas = 0,339 x tinggi foto yang tampil, tinggi dibatasi min(82vh, 651px)) sampai tepi kanan layar; kartu di tengahnya */}
+      <div className="absolute right-[3vw] lg:right-[5vw] bottom-8 xl:right-0 xl:left-[calc(50%+0.463*min(82vh,651px))] xl:-translate-x-6 z-20 hidden md:flex flex-col items-center">
+        {/* kartu putih (tetap putih di mode terang maupun gelap). Di xl+: kolom dari lengan kanan foto (setengah lebar jas = 0,463 x tinggi foto yang tampil, tinggi dibatasi min(82vh, 651px)) sampai tepi kanan layar; kartu di tengahnya */}
         <div className="hero-anim w-[250px] lg:w-[270px] rounded-3xl border border-zinc-200 bg-white px-5 py-4 text-center shadow-[0_14px_34px_-14px_rgba(0,0,0,0.35)] pointer-events-none" style={{ '--d': '1350ms' } as React.CSSProperties}>
           <p className="text-base lg:text-lg font-bold leading-snug text-emerald-600">{t('hero.role1')}</p>
           <p className="mt-0.5 text-xs lg:text-[13px] font-semibold leading-snug text-zinc-500">{t('hero.role2')}</p>
